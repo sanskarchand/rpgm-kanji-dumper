@@ -1,4 +1,4 @@
-##RPGM Kanji Dumping Script
+## RPGM Kanji Dumping Script
 
 This extremely simple program extracts dialogue events (Code 401) from RPG Maker MV and VX Ace games, given a path to the Data directory. Furigana-only words are skipped, and the rest are provided in decreasing order of frequency.
 
@@ -8,8 +8,8 @@ This was made mostly for learning the vocabulary of games so that we may play th
 
 Requires Python 3.
 
-###Dependencies:
+### Dependencies:
 * [nagisa](https://github.com/taishi-i/nagisa)
 
-####Example Usage:
+#### Example Usage:
 	python rpgm_kanji_dump.py Data/ --verbose --out out.txt --skip --vxace
