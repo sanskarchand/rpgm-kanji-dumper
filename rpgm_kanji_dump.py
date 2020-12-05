@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import collections
+import anki_maker
 
 KANJI_RANGE = (0x4E00, 0x9FBF)
 
@@ -31,6 +32,8 @@ parser.add_argument("--vxace", action='store_true', help="RPGM VX Ace mode")
 parser.add_argument("--verbose", action='store_true', help="Print filenames as they are processed")
 parser.add_argument("--skip", action='store_true', help="Skip the word frequencies")
 parser.add_argument("--out",  help="Name of the output file. Default is stdout")
+parser.add_argument("--anki", help="Name of the text file to generate Anki-readable cards")
+parser.add_argument("--alimit", type=int, help="Cutoff for the anki text file (number of words)")
 
 # finds k,v pairs (at all levels, with _parent_ as root) for a given k
 # puts that node (consider the json a tree) into _nodeList_
@@ -104,17 +107,22 @@ def main():
         outFile = open(args.out, "w")
     
     freqSortedKanji = kanjiCounter.most_common()
+    output = ''
     for pair in freqSortedKanji:
 
         if not args.skip:
             line = pair[0] + "\t" + str(pair[1])
         else:
             line = pair[0]
-
+        output += line + "\n"
         outFile.write(line + "\n")
 
     if outFile != sys.stdout:
         outFile.close()
+
+    if args.anki:
+        anki_maker.create_deck(output, args.anki, stream_read=True, num_words=args.alimit)
+
     
 
 if __name__ == '__main__':
