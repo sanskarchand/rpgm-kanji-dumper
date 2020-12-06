@@ -55,6 +55,9 @@ def get_nodes_by_name(parent, keyName, nodeList):
 def is_kanji(character):
     return ord(character) >= KANJI_RANGE[0] and ord(character) <= KANJI_RANGE[1]
 
+def not_kanji(word):
+    return not any(list(map(is_kanji, word)))
+
 def get_kanji(nodeList, kanjiCounter):
     #filter out only text events
     textEvents = [event for node in nodeList for event in node if event[ _param_dict['code'] ] == 401]
@@ -64,12 +67,10 @@ def get_kanji(nodeList, kanjiCounter):
         words = nagisa.tagging(japText)
 
         for word in words.words:
-            for char in  word:
-                if not (is_kanji(char)):
-                    continue
-                
-                # add to list of kanji
-                kanjiCounter[word] += 1
+            if not_kanji(word):
+                continue
+            # add to list of kanji
+            kanjiCounter[word] += 1
 
         
 
