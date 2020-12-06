@@ -12,7 +12,7 @@ Requires Python 3.
 * [nagisa](https://github.com/taishi-i/nagisa)
 
 #### Example Usage:
-	python rpgm_kanji_dump.py Data/ --verbose --out out.txt --skip --vxace --anki game_anki.txt --alimit 100
+	python rpgm_kanji_dump.py Data/ --verbose --out out.txt --skip --vxace --anki game_anki.txt --astop 100
 	
 _Effect_: Strips out words from the Data/ directory while listing the files as they are processed. It stores the words, in descending order by frequency of occurrence, in out.txt, but skips the actual frequencies (which would otherwise be on the same line after a tab). It takes the first 100 of these and puts them in the game_anki.txt in the form of semi-colon separated fields.
 

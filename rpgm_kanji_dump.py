@@ -31,9 +31,10 @@ parser.add_argument("datadir", help="data directory (contains .json files)")
 parser.add_argument("--vxace", action='store_true', help="RPGM VX Ace mode")
 parser.add_argument("--verbose", action='store_true', help="Print filenames as they are processed")
 parser.add_argument("--skip", action='store_true', help="Skip the word frequencies")
-parser.add_argument("--out",  help="Name of the output file. Default is stdout")
+parser.add_argument("--out",  help="Name of the output file. If not specified, prints to stdout")
 parser.add_argument("--anki", help="Name of the text file to generate Anki-readable cards")
-parser.add_argument("--alimit", type=int, help="Cutoff for the anki text file (number of words)")
+parser.add_argument("--astart", type=int, help="Start index to dump into anki file (inclusive)")
+parser.add_argument("--astop", type=int, help="End index to dump into anki file (inclusive)")
 
 # finds k,v pairs (at all levels, with _parent_ as root) for a given k
 # puts that node (consider the json a tree) into _nodeList_
@@ -121,7 +122,7 @@ def main():
         outFile.close()
 
     if args.anki:
-        anki_maker.create_deck(output, args.anki, stream_read=True, num_words=args.alimit)
+        anki_maker.create_deck(output, args.anki, stream_read=True, range_start=args.astart, range_stop=args.astop)
 
     
 

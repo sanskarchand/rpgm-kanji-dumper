@@ -6,7 +6,6 @@ import time
 JISHO_API = "https://jisho.org/api/v1/search/words?keyword="
 POLITENESS_FACTOR = 0.1
 INFO_BATCH = 10
-LIMIT = 50000
 
 def parse_response(response_text):
     resp = json.loads(response_text)
@@ -27,7 +26,7 @@ def get_definition(word):
 
     return None, None
 
-def create_deck(dump_output, out_filename, stream_read=True, num_words=None):
+def create_deck(dump_output, out_filename, stream_read=True, range_start=None, range_stop=None):
     data = dump_output
     fi = None
 
@@ -37,18 +36,17 @@ def create_deck(dump_output, out_filename, stream_read=True, num_words=None):
     
     lines = data.split('\n')
     anki_output = ""
-    num_processed = 0
-    limit = LIMIT
-    if num_words:
-        limit = int(num_words)
+    cur_ind = 0
+    
+    if range_start:
+        lines = lines[range_start:]
 
     for line in lines:
-        num_processed += 1
 
-        if num_processed > limit:
+        if range_stop and cur_ind > range_stop:
             break
-        if num_processed % INFO_BATCH == 0:
-            print("anki_maker: create_deck: processed {} words".format(num_processed))
+        if (cur_ind + 1)% INFO_BATCH == 0:
+            print("anki_maker: create_deck: processed {} words".format(cur_ind+1))
 
         # get only the word, not the frequencies (if present)
         word = line.split("\t")[0]
@@ -59,6 +57,7 @@ def create_deck(dump_output, out_filename, stream_read=True, num_words=None):
             print("Error: failed to get definition for ", word)
 
         time.sleep(POLITENESS_FACTOR)
+        cur_ind += 1
 
 
 
