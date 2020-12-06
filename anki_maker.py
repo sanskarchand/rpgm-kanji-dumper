@@ -7,13 +7,22 @@ JISHO_API = "https://jisho.org/api/v1/search/words?keyword="
 POLITENESS_FACTOR = 0.1
 INFO_BATCH = 10
 
-def parse_response(response_text):
+def parse_response(response_text, meta):
     resp = json.loads(response_text)
 
     if resp['data'] == []:
-        return ("<ERROR>", "<Fault in kanji extraction (likely) or jisho.rog>")
-    reading = resp['data'][0]['japanese'][0]['reading']
-    definition = resp['data'][0]['senses'][0]['english_definitions'][0]
+        print("Error: Unable to find any matches for {}".format(meta['word']))
+        return (None, None)
+    
+    data = resp['data'][0]
+
+    if 'reading' not in data['japanese'][0].keys():
+        return (None, None)
+    if 'english_definitions' not in data['senses'][0].keys():
+        return (None, None)
+
+    reading = data['japanese'][0]['reading']
+    definition = data['senses'][0]['english_definitions'][0]
 
     return (reading, definition)
 
@@ -22,7 +31,8 @@ def get_definition(word):
     url = JISHO_API + word
     r = requests.get(url)
     if r.status_code == 200:
-        return parse_response(r.text)
+        meta = {'word':word}
+        return parse_response(r.text, meta)
 
     return None, None
 
