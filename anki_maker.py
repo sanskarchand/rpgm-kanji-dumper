@@ -51,9 +51,16 @@ def create_deck(dump_output, out_filename, stream_read=True, range_start=None, r
     if range_start:
         lines = lines[range_start:]
 
+    limit = None
+    if range_stop:
+        if range_start:
+            limit = range_stop - range_start
+        else:
+            limit = range_stop
+
     for line in lines:
 
-        if range_stop and cur_ind > range_stop:
+        if limit and cur_ind > limit:
             break
         if (cur_ind + 1)% INFO_BATCH == 0:
             print("anki_maker: create_deck: processed {} words".format(cur_ind+1))
